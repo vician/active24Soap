@@ -1,0 +1,130 @@
+## RecordTypes
+- A
+	- type: A
+	- name: subdomain
+	- value: [ ip ]
+	- ip: ip adress
+- AAAA
+	- type: AAAA
+	- name: subdomain
+	- value: [ ip ]
+	- ip: ip adress
+- CAA
+	- type: CAA
+	- name: subdomain
+	- value: [ flags, tag, value ]
+	- flags
+	- tag: (issue|issuewild|iodef)
+	- value
+- CNAME
+	- type: CNAME
+	- name: subdomain
+	- value: [ alias ]
+	- alias: target alias
+- MX
+	- type: MX
+	- name: subdomain
+	- value: [ priority, mailserver ]
+	- priority
+	- mailserver
+- NS
+	- type: NS
+	- name: subdomain
+	- value: [ nameServer ]
+	- nameServer
+- SRV
+	- type: SRV
+	- name: subdomain
+	- value: [ priority, weight, port, target ]
+	- priority
+	- weight
+	- port
+	- target
+- SSHFP
+	- type: SSHFP
+	- name: subdomain
+	- value: [ algorithm, fingerprintType, text ]
+	- algorithm
+	- fingerprintType
+	- text
+- TLSA
+- TXT
+	- type: TXT
+	- name: subdomain
+	- value: [ text ]
+	- text
+'''
+RecordTypes:
+- A
+	- type: A
+	- name: subdomain
+	- value: [ ip ]
+	- ip: ip adress
+- AAAA
+	- type: AAAA
+	- name: subdomain
+	- value: [ ip ]
+	- ip: ip adress
+- CAA
+	- type: CAA
+	- name: subdomain
+	- value: [ flags, tag, value ]
+	- flags
+	- tag: (issue|issuewild|iodef)
+	- value
+- CNAME
+	- type: CNAME
+	- name: subdomain
+	- value: [ alias ]
+	- alias: target alias
+- MX
+	- type: MX
+	- name: subdomain
+	- value: [ priority, mailserver ]
+	- priority
+	- mailserver
+- NS
+	- type: NS
+	- name: subdomain
+	- value: [ nameServer ]
+	- nameServer
+- SRV
+	- type: SRV
+	- name: subdomain
+	- value: [ priority, weight, port, target ]
+	- priority
+	- weight
+	- port
+	- target
+- SSHFP
+	- type: SSHFP
+	- name: subdomain
+	- value: [ algorithm, fingerprintType, text ]
+	- algorithm
+	- fingerprintType
+	- text
+- TLSA @TODO
+- TXT
+	- type: TXT
+	- name: subdomain
+	- value: [ text ]
+	- text
+
+## All parameters
+
+- type
+- name
+- ip (A,AAAA)
+- flags (CAA)
+- tag (CAA)
+- value (CAA)
+- alias (CNAME)
+- priority (MX, SRV)
+- mailserver (MX)
+- nameServer (NS)
+- weight (SRV)
+- port (SRV)
+- target (SRV)
+- algorithm (SSHFP)
+- fingerprintType (SSHFP)
+- text (SSHFP, TXT)

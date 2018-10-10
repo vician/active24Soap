@@ -31,6 +31,7 @@ def check_errors(result):
 def create_record(client, ip, ttl, domain, record_type, name):
     '''Creates new DNS record'''
     newrecord = client.factory.create('DnsRecord' + str(record_type))
+    print(newrecord)
     newrecord['from'] = datetime.datetime.utcnow()
     newrecord['to'] = datetime.datetime.utcfromtimestamp(2147483647)
     if ttl is None:
@@ -39,13 +40,14 @@ def create_record(client, ip, ttl, domain, record_type, name):
     newrecord.type = client.factory.create('soapenc:string')
     newrecord.type.value = record_type
     newrecord.ip.value = ip
+
     newrecord.name.value = name
     newrecord.value = client.factory.create('soapenc:Array')
     newrecord.value.item = [newrecord.ip]
-    # print(newrecord)
+    print(newrecord)
     result = client.service.addDnsRecord(newrecord, domain)
     check_errors(result)
-    # print('New DNS record created.')
+    print('New DNS record created.')
 
 
 def update_record(client, dnsrecord, ip, ttl, domain, record_type):
@@ -66,16 +68,16 @@ def update_record(client, dnsrecord, ip, ttl, domain, record_type):
         newrecord.value = client.factory.create('soapenc:Array')
         result = client.service.updateDnsRecord(newrecord, domain)
         check_errors(result)
-        # print('DNS record updated')
-    # else:
-        # print('DNS record already has same IP and TTL')
+        print('DNS record updated')
+    else:
+        print('DNS record already has same IP and TTL')
 
 
 def delete_record(client, record):
     '''Deletes existing DNS record'''
     result = client.service.deleteDnsRecord(record.id, domain)
     check_errors(result)
-    # print('Record deleted.')
+    print('Record deleted.')
 
 
 def get_record(client, domain, name, record_type):
@@ -87,7 +89,7 @@ def get_record(client, domain, name, record_type):
         if (record.type == record_type) and (record.name == name):
             dnsrecord = record
     if dnsrecord is None:
-        # print('DNS Record not found')
+        print('DNS Record not found')
         client.service.logout()
         exit(1)
     return dnsrecord
@@ -124,6 +126,10 @@ def record_action(args):
     if action == 'CREATE':
         create_record(client, ip, ttl, domain, record_type, name)
 
+    if action == 'PRESENT':
+        dnsrecord = get_record(client, domain, name, record_type)
+        update_record(client, dnsrecord, ip, ttl, domain, record_type)
+
     # logout
     result = client.service.logout()
     # print('Done')
@@ -141,15 +147,15 @@ def main():
     parser.add_argument('-d', '--domain', required=True, dest='domain',
                         help='Domain name', type=str)
     parser.add_argument('-r', '--record', nargs='?', dest='record', default='A',
-                        choices=['A', 'AAAA'], help='Record type, default=A', type=str)
+                        choices=['A', 'AAAA', 'SSHFP'], help='Record type, default=A', type=str)
     parser.add_argument('-i', '--ip', dest='ip', nargs='?', type=str,
                         help='IP address')
     parser.add_argument('-n', '--name', required=True, dest='name', type=str,
                         help='DNS record name (without domain)')
     parser.add_argument('-t', '--ttl', nargs='?', dest='ttl',
                         help='TTL in seconds, if empty, uses TTL from DNSrecord', type=str)
-    parser.add_argument('-a', '--action', nargs='?', dest='action', default='UPDATE',
-                        choices=['UPDATE', 'CREATE', 'DELETE'], help='Action type, default=UPDATE', type=str)
+    parser.add_argument('-a', '--action', nargs='?', dest='action', default='PRESENT',
+                        choices=['UPDATE', 'CREATE', 'DELETE', 'PRESENT'], help='Action type, default=PRESENT', type=str)
 
     record_action(parser.parse_args())
 
